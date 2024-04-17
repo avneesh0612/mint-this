@@ -1,7 +1,7 @@
 export default function getSvg(
   title: string,
   author: string,
-  pfp: string,
+  pfp: string
 ): string {
   const svg = `
  <svg width="331" height="186" viewBox="0 0 331 186" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +34,7 @@ export default function getSvg(
   <rect x="1" y="1" width="329" height="184" rx="7" stroke="url(#paint0_linear_1_2)" stroke-width="2" />
   <foreignObject x="16" y="16" width="1040" height="480">
     <div class="author" xmlns="http://www.w3.org/1999/xhtml">
-      <img src="${pfp}" alt="pfp" style="width: 24px; border-radius: 50%;" />
+      <img src="${pfp}" alt="pfp" style="width: 24px; height: 24px; border-radius: 50%; object-fit: contain;" />
       <div class="displayName" xmlns="http://www.w3.org/1999/xhtml">
         ${author}
       </div>

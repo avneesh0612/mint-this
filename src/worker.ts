@@ -1,3 +1,4 @@
+import neynarClient from "./lib/neynarClient.js";
 import { redis } from "./lib/redis.js";
 import { sdk } from "./lib/thirdwebSdk.js";
 
@@ -12,8 +13,13 @@ while (true) {
         try {
           const messages = stream[1];
           for (const message of messages) {
+            if (!process.env.COLLECTION_ADDRESS) {
+              console.error("COLLECTION_ADDRESS not set");
+            }
+
             const contract = await sdk.getContract(
-              "0x0F64Ee63629CCc31b417133cF125FbCC3bD75840",
+              process.env.COLLECTION_ADDRESS ||
+                "0x0F64Ee63629CCc31b417133cF125FbCC3bD75840"
             );
 
             const data = JSON.parse(message[1][1]) as {
@@ -21,9 +27,21 @@ while (true) {
               description: string;
               image: string;
               address: string;
+              username: string;
             };
 
             const nft = await contract.erc721.mintTo(data.address, data);
+
+            if (!process.env.SIGNER_UUID) {
+              console.error("SIGNER_UUID not set");
+            } else {
+              await neynarClient.publishCast(
+                process.env.SIGNER_UUID,
+                `gm @${
+                  data.username
+                }! Check out the tx here: https://explorer.degen.tips/tx/${nft.receipt.transactionHash.toString()}`
+              );
+            }
 
             console.log(
               "worker success: ",
@@ -32,7 +50,7 @@ while (true) {
               "tx",
               nft.receipt.transactionHash.toString(),
               "to",
-              nft.receipt.to.toString(),
+              nft.receipt.to.toString()
             );
           }
         } catch (e) {
@@ -41,6 +59,6 @@ while (true) {
       }
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }

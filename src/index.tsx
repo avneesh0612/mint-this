@@ -12,8 +12,7 @@ export const app = new Frog({
   basePath: "/api",
 });
 
-const ADD_URL =
-  "https://warpcast.com/~/add-cast-action?actionType=post&name=Mint+this&icon=person&postUrl=https://d166-2405-201-800c-6a-cc9f-1e4c-a835-46a1.ngrok-free.app/api/mint";
+const ADD_URL = process.env.ADD_URL!;
 
 app.frame("/", (c) => {
   return c.res({
@@ -56,7 +55,7 @@ app.hono.post("/mint", async (c) => {
   try {
     const body = await c.req.json();
     const { action } = await neynarClient.validateFrameAction(
-      body.trustedData.messageBytes,
+      body.trustedData.messageBytes
     );
 
     let image;
@@ -67,7 +66,7 @@ app.hono.post("/mint", async (c) => {
       const svg = getSvg(
         action.cast.text,
         action.cast.author.display_name || action.cast.author.username,
-        action.cast.author.pfp_url || "https://warpcast.com/assets/logo.png",
+        action.cast.author.pfp_url || "https://warpcast.com/assets/logo.svg"
       );
 
       const ipfs = await sdk.storage.upload(svg);
@@ -81,11 +80,10 @@ app.hono.post("/mint", async (c) => {
       }`,
       image,
       address: action.interactor.verified_addresses.eth_addresses[0],
+      username: action.interactor.username,
     };
 
-    console.log("hi", data);
     const ack = await redis.xadd("NFTS", "*", "data", JSON.stringify(data));
-    console.log("done: ", ack);
 
     let message = `Minted! NFT will be in your wallet soon.`;
 
