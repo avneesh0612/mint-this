@@ -56,7 +56,7 @@ app.hono.post("/mint", async (c) => {
   try {
     const body = await c.req.json();
     const { action } = await neynarClient.validateFrameAction(
-      body.trustedData.messageBytes
+      body.trustedData.messageBytes,
     );
 
     let image;
@@ -67,7 +67,7 @@ app.hono.post("/mint", async (c) => {
       const svg = getSvg(
         action.cast.text,
         action.cast.author.display_name || action.cast.author.username,
-        action.cast.author.pfp_url || "https://warpcast.com/assets/logo.png"
+        action.cast.author.pfp_url || "https://warpcast.com/assets/logo.png",
       );
 
       const ipfs = await sdk.storage.upload(svg);
@@ -84,13 +84,14 @@ app.hono.post("/mint", async (c) => {
     };
 
     console.log("hi", data);
-    await redis.xadd("NFTS", "*", "data", JSON.stringify(data));
+    const ack = await redis.xadd("NFTS", "*", "data", JSON.stringify(data));
+    console.log("done: ", ack);
 
     let message = `Minted! NFT will be in your wallet soon.`;
 
     return c.json({ message });
   } catch (e) {
-    console.error(e);
+    console.error("error at /mint", e);
     return c.json({ message: "Error. Try Again." }, 500);
   }
 });

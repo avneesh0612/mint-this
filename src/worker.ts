@@ -1,47 +1,46 @@
 import { redis } from "./lib/redis.js";
 import { sdk } from "./lib/thirdwebSdk.js";
 
-const server = Bun.serve({
-  port: 8080,
-  async fetch(request) {
-    try {
-      let lastId = "$";
+while (true) {
+  try {
+    let lastId = "$";
 
-      const streamData = await redis.xread(
-        "BLOCK",
-        0,
-        "STREAMS",
-        "NFTS",
-        lastId
-      );
+    const streamData = await redis.xread("BLOCK", 0, "STREAMS", "NFTS", lastId);
 
-      if (streamData) {
-        for (const stream of streamData) {
-          console.log(stream);
+    if (streamData) {
+      for (const stream of streamData) {
+        try {
+          const messages = stream[1];
+          for (const message of messages) {
+            const contract = await sdk.getContract(
+              "0x0F64Ee63629CCc31b417133cF125FbCC3bD75840",
+            );
 
-          try {
-            for (const message of stream.messages) {
-              console.log(message);
+            const data = JSON.parse(message[1][1]) as {
+              name: string;
+              description: string;
+              image: string;
+              address: string;
+            };
 
-              const contract = await sdk.getContract(
-                "0x0F64Ee63629CCc31b417133cF125FbCC3bD75840"
-              );
+            const nft = await contract.erc721.mintTo(data.address, data);
 
-              const nft = await contract.erc721.mint();
-            }
-          } catch (e) {
-            console.error(e);
+            console.log(
+              "worker success: ",
+              "id",
+              nft.id,
+              "tx",
+              nft.receipt.transactionHash.toString(),
+              "to",
+              nft.receipt.to.toString(),
+            );
           }
+        } catch (e) {
+          console.error("worker error:", e);
         }
       }
-
-      return new Response("gm!");
-    } catch (e) {
-      console.log(e);
     }
-
-    return new Response("Welcome to Bun!");
-  },
-});
-
-console.log(`Listening on localhost:${server.port}`);
+  } catch (e) {
+    console.log(e);
+  }
+}

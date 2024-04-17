@@ -1,7 +1,7 @@
 export default function getSvg(
   title: string,
   author: string,
-  pfp: string
+  pfp: string,
 ): string {
   const svg = `
  <svg width="331" height="186" viewBox="0 0 331 186" fill="none" xmlns="http://www.w3.org/2000/svg">

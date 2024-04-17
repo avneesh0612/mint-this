@@ -1,15 +1,18 @@
 import { sdk } from "./src/lib/thirdwebSdk.js";
+import { redis } from "./src/lib/redis.js";
 
 console.log(new Date().toISOString() + " - " + "script.ts");
-const contract = await sdk.getContract(
-  "0x0F64Ee63629CCc31b417133cF125FbCC3bD75840"
+
+const ack = await redis.xadd(
+  "NFTS",
+  "*",
+  "data",
+  JSON.stringify({
+    name: "WarpCast NFT",
+    description: `$abc`,
+  }),
 );
 
-const nft = await contract.erc721.mint({
-  name: "WarpCast NFT",
-  description: `$abc`,
-});
-
-console.log(nft);
+console.log("done: ", ack);
 
 console.log(new Date().toISOString() + " - " + "script.ts" + " - " + "end");

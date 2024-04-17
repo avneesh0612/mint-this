@@ -12,5 +12,5 @@ export const sdk = ThirdwebSDK.fromPrivateKey(
   "degen-chain",
   {
     secretKey: process.env.SECRET_KEY,
-  }
+  },
 );
