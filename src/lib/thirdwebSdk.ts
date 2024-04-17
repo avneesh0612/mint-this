@@ -5,7 +5,7 @@ config();
 
 if (!process.env.PRIVATE_KEY || !process.env.SECRET_KEY) {
   throw new Error(
-    "Make sure you set PRIVATE_KEY and SECRET_KEY in your .env file"
+    "Make sure you set PRIVATE_KEY and SECRET_KEY in your .env file",
   );
 }
 
