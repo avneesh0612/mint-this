@@ -74,7 +74,7 @@ app.hono.post("/mint", async (c) => {
     }
 
     const data = {
-      name: "WarpCast NFT",
+      name: "Mint this!",
       description: `${action.cast.text} \n\n - ${
         action.cast.author.display_name || action.cast.author.username
       }`,
