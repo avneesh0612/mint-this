@@ -16,6 +16,7 @@ export const app = new Frog({
 });
 
 const ADD_URL = process.env.ADD_URL!;
+console.log("ADD_URL", ADD_URL);
 
 app.frame("/", (c) => {
   return c.res({
@@ -46,11 +47,14 @@ app.frame("/", (c) => {
             whiteSpace: "pre-wrap",
           }}
         >
-          gm! Add cast action to view followers count
+          Mint casts or cast media you like as NFTs right from the app using
+          this action! Click on the link below to add the action.
         </h2>
       </div>
     ),
-    intents: [<Button.Link href={ADD_URL}>Add Action</Button.Link>],
+    intents: [
+      <Button.Link href={new URL(ADD_URL).toString()}>Add Action</Button.Link>,
+    ],
   });
 });
 
