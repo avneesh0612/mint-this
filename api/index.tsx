@@ -2,11 +2,13 @@ import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { neynar } from "frog/hubs";
 import { serveStatic } from "frog/serve-static";
-import neynarClient from "./lib/neynarClient.js";
-import { sdk } from "./lib/thirdwebSdk.js";
-import getSvg from "./utils/_svg.js";
-import { redis } from "./lib/redis.js";
 import { handle } from "frog/vercel";
+import neynarClient from "../src/lib/neynarClient.js";
+import { redis } from "../src/lib/redis.js";
+import getSvg from "../src/utils/_svg.js";
+import { sdk } from "../src/lib/thirdwebSdk.js";
+
+// import { neynar } from 'frog/hubs'
 
 export const app = new Frog({
   hub: neynar({ apiKey: "NEYNAR_FROG_FM" }),
