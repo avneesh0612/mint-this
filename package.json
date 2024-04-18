@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun src/worker.ts",
     "dev": "frog dev",
-    "serve": "bun run src/index.tsx"
+    "serve": "bun src/index.tsx"
   },
   "dependencies": {
     "@neynar/nodejs-sdk": "^1.19.3",

@@ -1,6 +1,9 @@
 import neynarClient from "./lib/neynarClient.js";
 import { redis } from "./lib/redis.js";
 import { sdk } from "./lib/thirdwebSdk.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 while (true) {
   try {
@@ -39,7 +42,7 @@ while (true) {
                 process.env.SIGNER_UUID,
                 `gm @${
                   data.username
-                }! Check out the tx here: https://explorer.degen.tips/tx/${nft.receipt.transactionHash.toString()}`
+                }! Your NFT has been minted successfully! \n \n Check out the tx here: https://explorer.degen.tips/tx/${nft.receipt.transactionHash.toString()}`
               );
             }
 
