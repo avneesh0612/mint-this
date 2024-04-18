@@ -98,9 +98,13 @@ app.use("/*", serveStatic({ root: "./public" }));
 devtools(app, { serveStatic });
 
 if (typeof Bun !== "undefined") {
-  Bun.serve({
-    fetch: app.fetch,
-    port: 3000,
+  const server = Bun.serve({
+    hostname: "::",
+    port: process.env.PORT ?? 3000,
+    fetch(request) {
+      return new Response("Welcome to Bun!");
+    },
   });
-  console.log("Server is running on port 3000");
+
+  console.log(`Listening on http://localhost:${server.port}`);
 }
