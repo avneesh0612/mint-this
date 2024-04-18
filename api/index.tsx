@@ -48,7 +48,7 @@ app.frame("/", (c) => {
           }}
         >
           Mint casts or cast media you like as NFTs right from the app using
-          this action! Click on the link below to add the action.
+          this cast action! Click on the link below to add the action.
         </h2>
       </div>
     ),
