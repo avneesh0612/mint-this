@@ -6,6 +6,7 @@ import neynarClient from "./lib/neynarClient.js";
 import { sdk } from "./lib/thirdwebSdk.js";
 import getSvg from "./utils/_svg.js";
 import { redis } from "./lib/redis.js";
+import { handle } from "frog/vercel";
 
 export const app = new Frog({
   hub: neynar({ apiKey: "NEYNAR_FROG_FM" }),
@@ -94,17 +95,10 @@ app.hono.post("/mint", async (c) => {
   }
 });
 
-app.use("/*", serveStatic({ root: "./public" }));
-devtools(app, { serveStatic });
+// @ts-ignore
+const isEdgeFunction = typeof EdgeFunction !== "undefined";
+const isProduction = isEdgeFunction || import.meta.env?.MODE !== "development";
+devtools(app, isProduction ? { assetsPath: "/.frog" } : { serveStatic });
 
-if (typeof Bun !== "undefined") {
-  const server = Bun.serve({
-    hostname: "::",
-    port: process.env.PORT ?? 3000,
-    fetch() {
-      return new Response("gm!");
-    },
-  });
-
-  console.log(`Listening on http://localhost:${server.port}`);
-}
+export const GET = handle(app);
+export const POST = handle(app);
